@@ -1,393 +1,690 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>EasyCoin Help</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <title>EasyCoin • Earn & Dashboard</title>
+    <!-- Chart.js CDN for interactive chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-:root {
-  --accent: #4f46e5;
-  --text-main: #f9fafb;
-  --text-muted: #9ca3af;
-}
+        body {
+            background: #020617;
+            font-family: system-ui, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
 
-* { box-sizing: border-box; margin:0; padding:0; }
+        /* main app container */
+        .app-shell {
+            max-width: 1300px;
+            width: 100%;
+            background: #020617;
+            border-radius: 2rem;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
 
-body {
-  font-family: system-ui;
-  background: #020617;
-  color: var(--text-main);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:20px;
-}
+        /* header */
+        .top-header {
+            background: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-/* APP SHELL */
-.app-shell {
-  display:flex;
-  flex-direction:column;
-  width:100%;
-  max-width:1100px;
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid #1f2937;
-  background:#020617;
-}
+        .logo-img {
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        }
 
-/* HEADER */
-.top-header {
-  width:100%;
-  background:#0f172a;
-  border-bottom:1px solid #1f2937;
-  padding:12px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
 
-.logo-img {
-  height:40px;
-  object-fit:contain;
-}
+        .balance-box {
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 60px;
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            backdrop-filter: blur(2px);
+        }
 
-.header-right {
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
+        .balance {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #facc15;
+            letter-spacing: 0.3px;
+        }
 
-.balance-box {
-  display:flex;
-  align-items:center;
-  gap:6px;
-  background:#111827;
-  padding:6px 12px;
-  border-radius:10px;
-  border:1px solid #1f2937;
-}
+        .profile-btn {
+            background: #1f2a3e;
+            border: 1px solid #334155;
+            padding: 6px 14px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
 
-.balance {
-  font-weight:600;
-  color:#facc15;
-}
+        .profile-btn:hover {
+            background: #2d3a4e;
+            border-color: #6366f1;
+        }
 
-/* MOBILE MENU BUTTON */
-.mobile-header {
-  display:none;
-  width:100%;
-  background:#0f172a;
-  padding:10px 20px;
-  border-bottom:1px solid #1f2937;
-}
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: white;
+        }
 
-#mobileMenuBtn {
-  font-size:26px;
-  background:none;
-  border:none;
-  color:white;
-  cursor:pointer;
-}
+        /* main flex area */
+        .main-area {
+            display: flex;
+        }
 
-/* MOBILE DROPDOWN MENU */
-.mobile-accordion {
-  display:none;
-  background:#111827;
-  padding:10px;
-  border-bottom:1px solid #1f2937;
-}
+        /* SIDEBAR (desktop) */
+        .sidebar {
+            width: 240px;
+            background: #020617;
+            border-right: 1px solid #1e293b;
+            padding: 20px 12px;
+        }
 
-.accordion-item {
-  background:#1f2937;
-  margin:6px 0;
-  border-radius:10px;
-}
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 6px;
+        }
 
-.accordion-header {
-  padding:12px;
-  cursor:pointer;
-  font-weight:600;
-  color:white;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+        .nav-item svg {
+            width: 20px;
+            stroke: currentColor;
+        }
 
-/* MAIN AREA */
-.main-area {
-  display:flex;
-  width:100%;
-}
+        .nav-item.active {
+            background: #111827;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
 
-/* SIDEBAR */
-.sidebar {
-  width:220px;
-  background:#020617;
-  border-right:1px solid #1f2937;
-  padding:15px;
-}
+        .nav-item:hover:not(.active) {
+            background: #0f172a;
+            color: #cbd5e1;
+        }
 
-.nav-item {
-  padding:10px;
-  border-radius:10px;
-  cursor:pointer;
-  color:var(--text-muted);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+        /* content area */
+        .content {
+            flex: 1;
+            padding: 24px 28px;
+            background: #020617;
+        }
 
-.nav-item.active {
-  background:#111827;
-  color:#fff;
-}
+        .section {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
 
-/* CONTENT */
-.content {
-  flex:1;
-  padding:20px;
-}
+        .section.active {
+            display: block;
+        }
 
-.section {
-  display:none;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
 
-.section.active {
-  display:block;
-}
+        .panel {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 24px;
+            padding: 20px;
+        }
 
-.panel {
-  border:1px solid #1f2937;
-  border-radius:14px;
-  padding:16px;
-  margin-top:10px;
-}
+        .panel-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: #f1f5f9;
+        }
 
-.panel-title {
-  font-weight:600;
-  margin-bottom:10px;
-}
+        .panel-text {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
 
-.panel-text {
-  color:var(--text-muted);
-  font-size:14px;
-}
+        /* profile specific grids */
+        .profile-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
 
-/* MOBILE RESPONSIVE */
-@media(max-width:768px){
-  .sidebar { display:none; }
-  .mobile-header { display:flex; justify-content:flex-start; }
-  .main-area { flex-direction:column; }
-}
-</style>
+        .user-card {
+            background: #0f172a;
+            border: 1px solid #1f2a44;
+            border-radius: 28px;
+            padding: 24px;
+        }
+
+        .stats-mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .stat-card {
+            background: #0f172a;
+            border: 1px solid #1f2a44;
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.1s;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #a3e635;
+            letter-spacing: -0.5px;
+        }
+
+        .chart-container {
+            background: #0f172a;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 8px;
+            border: 1px solid #1e293b;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .time-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-btn {
+            background: #1f2937;
+            border: none;
+            color: #cbd5e6;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-btn.active-time {
+            background: #4f46e5;
+            color: white;
+            box-shadow: 0 2px 10px rgba(79,70,229,0.4);
+        }
+
+        canvas {
+            max-height: 270px;
+            width: 100%;
+        }
+
+        /* ========== MOBILE BOTTOM NAV (fixed) ========== */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0f172ad9;
+            backdrop-filter: blur(20px);
+            border-top: 1px solid #334155;
+            padding: 8px 16px 12px;
+            justify-content: space-around;
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 40px;
+            transition: 0.2s;
+        }
+
+        .bottom-nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .bottom-nav-item.active-bottom {
+            color: #facc15;
+            background: #1e293b60;
+        }
+
+        /* spacer for mobile content */
+        .mobile-spacer {
+            display: none;
+        }
+
+        /* responsive */
+        @media (max-width: 780px) {
+            .sidebar {
+                display: none;
+            }
+            .mobile-bottom-nav {
+                display: flex;
+            }
+            .mobile-spacer {
+                display: block;
+                height: 70px;
+            }
+            .content {
+                padding: 20px 18px 30px;
+                margin-bottom: 0;
+            }
+            .profile-grid-2col {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .stats-mini-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .top-header {
+                padding: 10px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-mini-grid {
+                grid-template-columns: 1fr;
+            }
+            .balance-box span:first-child {
+                display: none;
+            }
+            .time-btn-group {
+                margin-top: 8px;
+            }
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
 <div class="app-shell">
-
-  <!-- HEADER -->
-  <header class="top-header">
-    <img class="logo-img" src="https://i.postimg.cc/4xGbphPW/Screenshot-2026-04-12-at-3-41-51-PM-removebg-preview.png" alt="Logo">
-
-    <div class="header-right">
-      <div class="balance-box">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#facc15">
-          <circle cx="12" cy="12" r="10" stroke="#eab308" stroke-width="2"/>
-          <text x="12" y="16" text-anchor="middle" font-size="12" fill="#000">★</text>
-        </svg>
-        <span class="balance">100</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- MOBILE MENU BUTTON -->
-  <div class="mobile-header">
-    <button id="mobileMenuBtn">☰</button>
-  </div>
-
-  <!-- MOBILE DROPDOWN MENU -->
-  <div class="mobile-accordion" id="mobileAccordion">
-
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="earn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M12 2l7 7-7 13L5 9l7-7z"/>
-        </svg>
-        Earn
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="shop">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <circle cx="9" cy="21" r="1"/>
-          <circle cx="20" cy="21" r="1"/>
-          <path d="M1 1h4l3.6 7.59L6 14h13l3-7H6"/>
-        </svg>
-        Shop
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="leaders">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M8 21h8M12 17v4M7 4v2a5 5 0 0 0 10 0V4H7z"/>
-          <path d="M5 4H2v2a5 5 0 0 0 5 5"/>
-          <path d="M19 4h3v2a5 5 0 0 1-5 5"/>
-        </svg>
-        Leaders
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="help">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/>
-          <circle cx="12" cy="17" r="1"/>
-        </svg>
-        Help
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="chat">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        Chat
-      </div>
-    </div>
-
-  </div>
-
-  <!-- MAIN AREA -->
-  <div class="main-area">
-
-    <!-- SIDEBAR (DESKTOP) -->
-    <aside class="sidebar">
-
-      <div class="nav-item active" data-target="earn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M12 2l7 7-7 13L5 9l7-7z"/>
-        </svg>
-        Earn
-      </div>
-
-      <div class="nav-item" data-target="shop">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <circle cx="9" cy="21" r="1"/>
-          <circle cx="20" cy="21" r="1"/>
-          <path d="M1 1h4l3.6 7.59L6 14h13l3-7H6"/>
-        </svg>
-        Shop
-      </div>
-
-      <div class="nav-item" data-target="leaders">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M8 21h8M12 17v4M7 4v2a5 5 0 0 0 10 0V4H7z"/>
-          <path d="M5 4H2v2a5 5 0 0 0 5 5"/>
-          <path d="M19 4h3v2a5 5 0 0 1-5 5"/>
-        </svg>
-        Leaders
-      </div>
-
-      <div class="nav-item" data-target="help">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/>
-          <circle cx="12" cy="17" r="1"/>
-        </svg>
-        Help
-      </div>
-
-      <div class="nav-item" data-target="chat">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        Chat
-      </div>
-
-    </aside>
-
-    <!-- CONTENT -->
-    <main class="content">
-
-      <div class="section active" id="section-earn">
-        <div class="panel">
-          <div class="panel-title">Earn Diamonds</div>
-          <div class="panel-text">Earn by completing surveys, offers, and apps.</div>
+    <!-- header with profile & balance -->
+    <header class="top-header">
+        <img class="logo-img" src="https://i.postimg.cc/4xGbphPW/Screenshot-2026-04-12-at-3-41-51-PM-removebg-preview.png" alt="EasyCoin">
+        <div class="header-right">
+            <div class="balance-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#facc15" stroke-width="1.5" fill="#facc1522"/>
+                    <path d="M12 6v6l4 2" stroke="#facc15" stroke-width="1.5"/>
+                    <circle cx="12" cy="12" r="2" fill="#facc15"/>
+                </svg>
+                <span class="balance" id="globalBalance">1,890</span>
+            </div>
+            <div class="profile-btn" id="headerProfileBtn">
+                <div class="profile-avatar">E</div>
+                <span>Profile</span>
+            </div>
         </div>
-      </div>
+    </header>
 
-      <div class="section" id="section-shop">
-        <div class="panel">
-          <div class="panel-title">Shop</div>
-          <div class="panel-text">Spend diamonds on rewards and withdrawals.</div>
-        </div>
-      </div>
+    <!-- main area (desktop sidebar + content) -->
+    <div class="main-area">
+        <!-- desktop sidebar -->
+        <aside class="sidebar">
+            <div class="nav-item active" data-target="earn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 7-7 13L5 9l7-7z"/></svg>
+                <span>Earn</span>
+            </div>
+            <div class="nav-item" data-target="shop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l3.6 7.59L6 14h13l3-7H6"/></svg>
+                <span>Shop</span>
+            </div>
+            <div class="nav-item" data-target="leaders">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8M12 17v4M7 4v2a5 5 0 0 0 10 0V4H7z"/><path d="M5 4H2v2a5 5 0 0 0 5 5"/><path d="M19 4h3v2a5 5 0 0 1-5 5"/></svg>
+                <span>Leaders</span>
+            </div>
+            <div class="nav-item" data-target="help">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="1"/></svg>
+                <span>Help</span>
+            </div>
+            <div class="nav-item" data-target="chat">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Chat</span>
+            </div>
+            <div class="nav-item" id="sidebarProfileBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Profile</span>
+            </div>
+        </aside>
 
-      <div class="section" id="section-leaders">
-        <div class="panel">
-          <div class="panel-title">Leaders</div>
-          <div class="panel-text">See top users and leaderboard rankings.</div>
-        </div>
-      </div>
+        <!-- dynamic content sections -->
+        <main class="content">
+            <div class="section" id="section-earn">
+                <div class="panel">
+                    <div class="panel-title">💎 Earn Diamonds</div>
+                    <div class="panel-text">Complete surveys, watch videos, download apps & earn instant rewards. Your balance updates in real time.</div>
+                </div>
+            </div>
+            <div class="section" id="section-shop">
+                <div class="panel">
+                    <div class="panel-title">🛍️ Rewards Store</div>
+                    <div class="panel-text">Spend your EasyCoins on gift cards, crypto vouchers, exclusive merch and more.</div>
+                </div>
+            </div>
+            <div class="section" id="section-leaders">
+                <div class="panel">
+                    <div class="panel-title">🏆 Leaderboard</div>
+                    <div class="panel-text">Compete with top earners globally. Weekly winners get bonus diamonds & badges.</div>
+                </div>
+            </div>
+            <div class="section" id="section-help">
+                <div class="panel">
+                    <div class="panel-title">📘 Help Center</div>
+                    <div class="panel-text">FAQ, support tickets, withdrawal guides. Contact: support@easycoin.com</div>
+                </div>
+            </div>
+            <div class="section" id="section-chat">
+                <div class="panel">
+                    <div class="panel-title">💬 Community Hub</div>
+                    <div class="panel-text">Live chat, tips, and discussions with earners worldwide.</div>
+                </div>
+            </div>
 
-      <div class="section" id="section-help">
-        <div class="panel">
-          <div class="panel-title">Help</div>
-          <div class="panel-text">FAQ and support information.</div>
-        </div>
-      </div>
+            <!-- PROFILE SECTION with Chart.js -->
+            <div class="section" id="section-profile">
+                <div class="profile-grid-2col">
+                    <!-- user info card -->
+                    <div class="user-card">
+                        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                            <div style="width: 78px; height: 78px; background: linear-gradient(145deg,#4f46e5,#a855f7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; box-shadow: 0 6px 14px rgba(79,70,229,0.5);">⚡</div>
+                            <div>
+                                <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
+                                    <span style="font-size: 26px; font-weight: 800;">EASY_RIDER</span>
+                                    <span style="background: #4f46e5; padding: 4px 12px; border-radius: 60px; font-size: 12px; font-weight: 600;">LVL 14</span>
+                                </div>
+                                <div style="color: #9ca3af; margin-top: 6px;">📅 Member since Jan 2025 · <span style="color:#a3e635;">● Active now</span></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 26px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem;"><span>✨ XP Progress</span><span style="color:#a3e635;">6,250 / 8,000 XP</span></div>
+                            <div style="background: #1e293b; height: 10px; border-radius: 20px; margin-top: 8px; overflow: hidden;">
+                                <div style="width: 78%; background: linear-gradient(90deg,#a3e635,#eab308); height: 100%; border-radius: 20px;"></div>
+                            </div>
+                            <div class="panel-text" style="margin-top: 10px;">🎯 1,750 XP to next rank → +100 bonus coins</div>
+                        </div>
+                    </div>
+                    <!-- 4 stat cards -->
+                    <div class="stats-mini-grid">
+                        <div class="stat-card"><div class="stat-number" id="statTotalEarn">18,720</div><div style="color:#9ca3af;">💰 Total Earnings</div></div>
+                        <div class="stat-card"><div class="stat-number" id="statOffers">512</div><div style="color:#9ca3af;">✅ Offers Done</div></div>
+                        <div class="stat-card"><div class="stat-number" id="statReferrals">41</div><div style="color:#9ca3af;">👥 Referrals</div></div>
+                        <div class="stat-card"><div class="stat-number" id="stat30Days">3,240</div><div style="color:#9ca3af;">📈 30d Earnings</div></div>
+                    </div>
+                </div>
 
-      <div class="section" id="section-chat">
-        <div class="panel">
-          <div class="panel-title">Chat</div>
-          <div class="panel-text">Community chat and messaging.</div>
-        </div>
-      </div>
+                <!-- CHART panel with interactive Chart.js -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="panel-title" style="margin:0;">📈 Earnings Timeline</div>
+                        <div class="time-btn-group" id="chartTimeGroup">
+                            <button class="time-btn active-time" data-range="30">30 days</button>
+                            <button class="time-btn" data-range="7">7 days</button>
+                            <button class="time-btn" data-range="24h">24 hours</button>
+                        </div>
+                    </div>
+                    <canvas id="earningsChart" width="800" height="270" style="max-height:270px; width:100%"></canvas>
+                    <div class="panel-text" style="text-align: center; margin-top: 14px;">✨ Interactive chart — daily EasyCoin earnings ✨</div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-    </main>
+    <!-- mobile spacer (so content not hidden under fixed bottom nav) -->
+    <div class="mobile-spacer"></div>
+</div>
 
-  </div>
-
+<!-- FIXED BOTTOM NAVIGATION (mobile only) -->
+<div class="mobile-bottom-nav" id="mobileBottomNav">
+    <button class="bottom-nav-item" data-target="earn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l7 7-7 13L5 9l7-7z"/></svg>
+        <span>Earn</span>
+    </button>
+    <button class="bottom-nav-item" data-target="shop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l3.6 7.59L6 14h13l3-7H6"/></svg>
+        <span>Shop</span>
+    </button>
+    <button class="bottom-nav-item" data-target="leaders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 21h8M12 17v4M7 4v2a5 5 0 0 0 10 0V4H7z"/><path d="M5 4H2v2a5 5 0 0 0 5 5"/><path d="M19 4h3v2a5 5 0 0 1-5 5"/></svg>
+        <span>Leaders</span>
+    </button>
+    <button class="bottom-nav-item" data-target="help">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="1"/></svg>
+        <span>Help</span>
+    </button>
+    <button class="bottom-nav-item" data-target="chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Chat</span>
+    </button>
+    <button class="bottom-nav-item" id="mobileBottomProfileBtn" data-target="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
+    </button>
 </div>
 
 <script>
-// SWITCH SECTIONS
-const navItems = document.querySelectorAll(".nav-item");
-const sections = document.querySelectorAll(".section");
-const accordionHeaders = document.querySelectorAll(".accordion-header");
+    // -------- CHART.JS LOGIC ----------
+    const ctx = document.getElementById('earningsChart').getContext('2d');
+    let earningsChart;
 
-function switchSection(target){
-  sections.forEach(s => s.classList.remove("active"));
-  document.getElementById("section-" + target).classList.add("active");
+    const dataSets = {
+        '30': [48, 52, 67, 84, 92, 110, 128, 140, 158, 172, 195, 210, 228, 250, 272, 298, 320, 344, 372, 398, 425, 450, 478, 505, 530, 558, 590, 620, 655, 690],
+        '7': [245, 278, 310, 365, 430, 505, 578],
+        '24h': [72, 88, 94, 105, 130, 148, 165, 182, 200, 222, 245, 268, 290, 315, 340, 362, 385, 410, 440, 470, 500, 535, 570, 600]
+    };
 
-  navItems.forEach(n => n.classList.toggle("active", n.dataset.target === target));
-}
+    const labelsMap = {
+        '30': Array.from({length: 30}, (_, i) => `Day ${i+1}`),
+        '7': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        '24h': Array.from({length: 24}, (_, i) => `${i}:00`)
+    };
 
-// DESKTOP NAV
-navItems.forEach(item => {
-  item.addEventListener("click", () => switchSection(item.dataset.target));
-});
+    function updateChart(range) {
+        let data = dataSets[range] || dataSets['30'];
+        let labels = labelsMap[range] || labelsMap['30'];
+        if (earningsChart) {
+            earningsChart.data.datasets[0].data = data;
+            earningsChart.data.labels = labels;
+            earningsChart.update();
+        } else {
+            earningsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '💰 EasyCoins earned',
+                        data: data,
+                        borderColor: '#a3e635',
+                        backgroundColor: 'rgba(163, 230, 53, 0.06)',
+                        borderWidth: 3,
+                        pointRadius: 3.5,
+                        pointBackgroundColor: '#facc15',
+                        pointBorderColor: '#0f172a',
+                        pointBorderWidth: 1.2,
+                        tension: 0.3,
+                        fill: true,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        tooltip: { backgroundColor: '#0f172a', titleColor: '#f1f5f9', bodyColor: '#cbd5e1' },
+                        legend: { labels: { color: '#cbd5e6', font: { weight: '500' } } }
+                    },
+                    scales: {
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Coins', color: '#9ca3af' } },
+                        x: { ticks: { color: '#94a3b8', maxRotation: 40, autoSkip: true }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+    }
 
-// MOBILE MENU BUTTON
-document.getElementById("mobileMenuBtn").onclick = () => {
-  const acc = document.getElementById("mobileAccordion");
-  acc.style.display = acc.style.display === "block" ? "none" : "block";
-};
+    // time buttons handler
+    const timeBtns = document.querySelectorAll('.time-btn');
+    function setActiveTimeBtn(activeRange) {
+        timeBtns.forEach(btn => {
+            const range = btn.getAttribute('data-range');
+            if (range === activeRange) btn.classList.add('active-time');
+            else btn.classList.remove('active-time');
+        });
+    }
+    timeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const range = btn.getAttribute('data-range');
+            setActiveTimeBtn(range);
+            updateChart(range);
+        });
+    });
 
-// MOBILE MENU ITEM CLICK
-accordionHeaders.forEach(header => {
-  header.addEventListener("click", () => {
-    switchSection(header.dataset.target);
-    document.getElementById("mobileAccordion").style.display = "none";
-  });
-});
+    // -------- SECTION SWITCH (unified) ----------
+    const sections = document.querySelectorAll('.section');
+    const desktopNavItems = document.querySelectorAll('.nav-item');
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+
+    function switchSection(targetId) {
+        // update sections visibility
+        sections.forEach(sec => sec.classList.remove('active'));
+        const activeSection = document.getElementById(`section-${targetId}`);
+        if (activeSection) activeSection.classList.add('active');
+
+        // desktop sidebar active style
+        desktopNavItems.forEach(item => {
+            const itemTarget = item.getAttribute('data-target');
+            if (itemTarget === targetId) item.classList.add('active');
+            else item.classList.remove('active');
+        });
+
+        // mobile bottom nav active style
+        bottomNavItems.forEach(btn => {
+            const btnTarget = btn.getAttribute('data-target');
+            if (btnTarget === targetId) btn.classList.add('active-bottom');
+            else btn.classList.remove('active-bottom');
+        });
+    }
+
+    // desktop nav (including profile from sidebar)
+    desktopNavItems.forEach(item => {
+        if (item.id !== 'sidebarProfileBtn') {
+            item.addEventListener('click', () => {
+                const target = item.getAttribute('data-target');
+                if (target) switchSection(target);
+            });
+        }
+    });
+    document.getElementById('sidebarProfileBtn')?.addEventListener('click', () => openProfile());
+
+    // bottom nav listeners
+    bottomNavItems.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const target = btn.getAttribute('data-target');
+            if (target === 'profile') openProfile();
+            else if (target) switchSection(target);
+        });
+    });
+
+    // header profile button
+    document.getElementById('headerProfileBtn')?.addEventListener('click', () => openProfile());
+    document.getElementById('mobileBottomProfileBtn')?.addEventListener('click', () => openProfile());
+
+    let chartInitialized = false;
+    function openProfile() {
+        switchSection('profile');
+        // simulate fresh stats to feel dynamic
+        document.getElementById('statTotalEarn').innerText = Math.floor(18720 + Math.random() * 380);
+        document.getElementById('statOffers').innerText = Math.floor(512 + Math.random() * 15);
+        document.getElementById('statReferrals').innerText = Math.floor(41 + Math.random() * 5);
+        document.getElementById('stat30Days').innerText = Math.floor(3240 + Math.random() * 220);
+        const balanceSpan = document.getElementById('globalBalance');
+        if (balanceSpan) balanceSpan.innerText = Math.floor(1890 + Math.random() * 70);
+        
+        if (!chartInitialized) {
+            updateChart('30');
+            chartInitialized = true;
+        } else {
+            const activeRange = document.querySelector('.time-btn.active-time')?.getAttribute('data-range') || '30';
+            updateChart(activeRange);
+        }
+    }
+
+    // default start: earn section active
+    switchSection('earn');
+    // preload chart when profile opened first time (lazy)
+    // set default bottom active visual for earn
+    document.querySelector('.bottom-nav-item[data-target="earn"]')?.classList.add('active-bottom');
 </script>
-
 </body>
 </html>
