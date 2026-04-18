@@ -1,644 +1,712 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>EasyCoin — Earn & Dashboard</title>
-    <!-- Chart.js for interactive earnings chart -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>EasyCoin Terminal | Industrial CE 2007</title>
+  <style>
+    /* ============================================
+       INDUSTRIAL CE 2007 — FIXED & NEAT DESKTOP
+       Rugged, high-contrast, zero visual noise
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background: #020617;
-            font-family: system-ui, 'Inter', -apple-system, 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    body {
+      background: #0a0c12;
+      font-family: 'Segoe UI', 'Tahoma', 'Microsoft Sans Serif', 'Lucida Grande', system-ui, sans-serif;
+      color: #c0cbd6;
+      line-height: 1.45;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        /* main app container */
-        .app {
-            width: 100%;
-            max-width: 1400px;
-            background: #020617;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    /* MAIN APPLICATION CONTAINER — fixed width, centered, clean */
+    .app-container {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      background: #0a0c12;
+      border: 1px solid #2a313c;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.1s ease;
+    }
 
-        /* ========= FIXED TOP BAR (sticky header) ========= */
-        .top-navbar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: #0f172a;
-            border-bottom: 1px solid #1e293b;
-            padding: 12px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-        }
+    /* ========== TYPOGRAPHY (clean industrial) ========== */
+    h1, h2, h3, h4 {
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      color: #d6e3ef;
+    }
 
-        .logo-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    /* ========== BUTTONS & CONTROLS ========== */
+    button, .ce-button {
+      background: #1a212c;
+      border: 1px solid #3a4453;
+      color: #d6e3ef;
+      padding: 6px 16px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.08s linear;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 1px 2px rgba(0,0,0,0.3);
+    }
+    button:hover, .ce-button:hover {
+      background: #26303f;
+      border-color: #5f7f9e;
+    }
+    button:active {
+      background: #0f131c;
+      transform: translateY(1px);
+    }
 
-        .logo-img {
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
-        }
+    .mini-redeem-btn {
+      background: #1f2937;
+      border: 1px solid #4a5a6e;
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      margin-top: 8px;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-        .logo-text {
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #facc15, #fbbf24);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
+    /* ========== PANELS & CARDS (clean edges) ========== */
+    .panel {
+      background: #11161f;
+      border: 1px solid #2a313c;
+      border-radius: 2px;
+      padding: 22px 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .panel-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      color: #d6e3ef;
+      border-left: 3px solid #5f7f9e;
+      padding-left: 12px;
+      letter-spacing: 0.2px;
+    }
+    .panel-text {
+      color: #b0c2d4;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
 
-        .header-stats {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
+    /* METRICS GRID — desktop neat */
+    .industrial-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin: 20px 0 12px;
+    }
+    .metric-card {
+      background: #0c0f16;
+      border: 1px solid #2a313c;
+      padding: 14px 12px;
+      text-align: center;
+      transition: border 0.1s;
+    }
+    .metric-card:hover {
+      border-color: #4f6e8c;
+    }
+    .metric-value {
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: #7c9ec2;
+      letter-spacing: 1px;
+    }
+    .metric-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #8e9eae;
+      letter-spacing: 1px;
+      margin-top: 6px;
+    }
 
-        .balance-badge {
-            background: #111827;
-            border: 1px solid #334155;
-            border-radius: 60px;
-            padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            backdrop-filter: blur(4px);
-        }
+    /* HEADER (industrial top bar) */
+    .top-header {
+      background: #0f141e;
+      border-bottom: 1px solid #2a313c;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .logo-img {
+      height: 46px;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 2px black);
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .balance-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0c0f16;
+      padding: 6px 18px;
+      border: 1px solid #2a313c;
+      border-radius: 2px;
+      background: #0a0e14;
+    }
+    .balance {
+      font-weight: 700;
+      color: #facc15;
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
 
-        .balance-number {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: #facc15;
-            letter-spacing: 0.5px;
-        }
+    /* USER AVATAR + LEVEL (clean badge) */
+    .user-avatar-container {
+      position: relative;
+    }
+    .avatar-wrapper {
+      position: relative;
+      cursor: pointer;
+      transition: filter 0.1s;
+    }
+    .user-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #facc15;
+      background: #1e2a3a;
+    }
+    .level-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -8px;
+      background: #facc15;
+      color: #0a0c12;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 20px;
+      border: 1px solid #0f141e;
+      font-family: monospace;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px black;
+    }
 
-        .profile-trigger {
-            background: #1f2a3e;
-            border: 1px solid #3b4252;
-            border-radius: 48px;
-            padding: 6px 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
+    /* MAIN LAYOUT: SIDEBAR + CONTENT (desktop perfect) */
+    .main-layout {
+      display: flex;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+    .sidebar {
+      width: 240px;
+      background: #0c0f16;
+      border-right: 1px solid #2a313c;
+      padding: 20px 8px;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      margin: 6px 8px;
+      border-radius: 2px;
+      color: #9aabbb;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all 0.08s linear;
+    }
+    .nav-item.active {
+      background: #11161f;
+      color: #e0ecf5;
+      border-left-color: #facc15;
+    }
+    .nav-item:hover:not(.active) {
+      background: #131a24;
+      color: #cbdae6;
+    }
+    .content {
+      flex: 1;
+      padding: 28px 28px;
+      min-width: 0;
+      background: #0a0c12;
+    }
 
-        .profile-trigger:hover {
-            background: #2d3a4e;
-            border-color: #6366f1;
-            transform: scale(0.98);
-        }
+    /* SECTIONS (smooth transitions) */
+    .section {
+      display: none;
+      animation: fadeQuick 0.12s ease;
+    }
+    .section.active {
+      display: block;
+    }
+    @keyframes fadeQuick {
+      0% { opacity: 0; transform: translateY(3px);}
+      100% { opacity: 1; transform: translateY(0);}
+    }
 
-        .avatar-icon {
-            width: 34px;
-            height: 34px;
-            background: linear-gradient(145deg, #4f46e5, #7c3aed);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1rem;
-            color: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
+    /* INDUSTRIAL TABLE / LEADERBOARD clean */
+    .leader-row {
+      display: grid;
+      grid-template-columns: 48px 1fr 100px;
+      gap: 12px;
+      padding: 12px 8px;
+      border-bottom: 1px solid #1e242e;
+      font-size: 0.85rem;
+      font-family: monospace;
+    }
+    .leader-row:last-child {
+      border-bottom: none;
+    }
+    .leader-rank {
+      color: #facc15;
+      font-weight: bold;
+    }
 
-        /* ========= DESKTOP HORIZONTAL NAVIGATION (below header, still top area) ========= */
-        .nav-links {
-            background: #020617;
-            border-bottom: 1px solid #1e293b;
-            padding: 0 24px;
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            scrollbar-width: thin;
-        }
+    /* CHAT TERMINAL (fixed style) */
+    .ce-terminal {
+      background: #06080c;
+      border: 1px solid #2a313c;
+      font-family: 'Courier New', monospace;
+      padding: 14px;
+      font-size: 0.8rem;
+      color: #b8e2b0;
+      margin-top: 14px;
+      border-radius: 2px;
+    }
 
-        .nav-btn {
-            background: transparent;
-            border: none;
-            padding: 14px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 2px solid transparent;
-            white-space: nowrap;
-        }
+    /* ALERT / INFO */
+    .ce-alert {
+      background: #1f2a1f;
+      border-left: 4px solid #7e9e5f;
+      padding: 12px;
+      font-size: 0.8rem;
+      margin-top: 14px;
+    }
 
-        .nav-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: 1.8;
-            fill: none;
-        }
+    /* STATUS BAR (neat fixed) */
+    .ce-statusbar {
+      background: #0c0f16;
+      border-top: 1px solid #2a313c;
+      padding: 6px 24px;
+      font-size: 0.7rem;
+      color: #8e9eae;
+      display: flex;
+      justify-content: space-between;
+      font-family: monospace;
+    }
 
-        .nav-btn.active-nav {
-            color: #facc15;
-            border-bottom-color: #facc15;
-            background: rgba(250, 204, 21, 0.05);
-        }
+    /* ========== MOBILE ADAPTATIONS (keep desktop clean, no break) ========== */
+    .mobile-header, .mobile-accordion {
+      display: none;
+    }
 
-        .nav-btn:hover:not(.active-nav) {
-            color: #cbd5e1;
-            background: #11182730;
-            border-bottom-color: #4f46e5;
-        }
+    /* Ensure desktop remains pristine */
+    @media (max-width: 760px) {
+      body {
+        padding: 8px;
+      }
+      .sidebar {
+        display: none;
+      }
+      .mobile-header {
+        display: flex;
+        background: #0f141e;
+        padding: 10px 16px;
+        border-bottom: 1px solid #2a313c;
+      }
+      #mobileMenuBtn {
+        background: #1a212c;
+        border: 1px solid #3a4453;
+        font-size: 22px;
+        padding: 4px 16px;
+      }
+      .mobile-accordion {
+        display: none;
+        background: #0c0f16;
+        border-bottom: 1px solid #2a313c;
+        padding: 10px;
+      }
+      .accordion-item {
+        background: #11161f;
+        margin: 6px 0;
+        border: 1px solid #2a313c;
+      }
+      .accordion-header {
+        padding: 12px;
+        cursor: pointer;
+        display: flex;
+        gap: 12px;
+        font-weight: 500;
+      }
+      .main-layout {
+        flex-direction: column;
+      }
+      .content {
+        padding: 18px;
+      }
+      .industrial-metrics {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        /* main content area */
-        .main-content {
-            flex: 1;
-            padding: 28px 28px 40px;
-        }
+    /* Scrollbar industrial */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c0f16;
+      border: 1px solid #1e242e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a313c;
+      border: 1px solid #3a4453;
+    }
 
-        .section {
-            display: none;
-            animation: fadeSlide 0.25s ease;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(8px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-
-        /* card style */
-        .card {
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 28px;
-            padding: 24px;
-            transition: all 0.1s;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-text {
-            color: #9ca3af;
-            line-height: 1.5;
-        }
-
-        /* profile specific grids */
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 28px;
-        }
-
-        .user-info-card {
-            background: #0f172a;
-            border: 1px solid #1f2a44;
-            border-radius: 32px;
-            padding: 28px;
-        }
-
-        .stats-mini-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .stat-brick {
-            background: #0f172a;
-            border: 1px solid #1f2a44;
-            border-radius: 26px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-number-lg {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #a3e635;
-            letter-spacing: -1px;
-        }
-
-        .chart-panel {
-            background: #0f172a;
-            border-radius: 32px;
-            padding: 20px;
-            border: 1px solid #1e293b;
-            margin-top: 8px;
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
-
-        .time-group {
-            display: flex;
-            gap: 12px;
-        }
-
-        .time-btn {
-            background: #1f2937;
-            border: none;
-            color: #cbd5e6;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .time-btn.active-time {
-            background: #4f46e5;
-            color: white;
-            box-shadow: 0 2px 8px rgba(79,70,229,0.5);
-        }
-
-        canvas {
-            max-height: 270px;
-            width: 100%;
-        }
-
-        /* bottom spacer for mobile (no bottom nav, but keep margins) */
-        @media (max-width: 780px) {
-            .top-navbar {
-                padding: 10px 18px;
-            }
-            .logo-text {
-                font-size: 1.2rem;
-            }
-            .balance-badge {
-                padding: 4px 14px;
-            }
-            .balance-number {
-                font-size: 1.1rem;
-            }
-            .profile-trigger span:last-child {
-                display: none;
-            }
-            .profile-trigger {
-                padding: 4px 12px;
-            }
-            .nav-links {
-                padding: 0 12px;
-                gap: 4px;
-            }
-            .nav-btn {
-                padding: 10px 12px;
-                font-size: 0.8rem;
-            }
-            .main-content {
-                padding: 20px 18px 32px;
-            }
-            .profile-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .stats-mini-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .stats-mini-grid {
-                grid-template-columns: 1fr;
-            }
-            .chart-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-        }
-    </style>
+    /* helper spacing */
+    .mt-3 { margin-top: 18px; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .ce-text-accent { color: #7c9ec2; }
+  </style>
 </head>
 <body>
-<div class="app">
-    <!-- ========= FIXED TOP HEADER (sticky, always on top) ========= -->
-    <div class="top-navbar">
-        <div class="logo-brand">
-            <img class="logo-img" src="https://i.postimg.cc/4xGbphPW/Screenshot-2026-04-12-at-3-41-51-PM-removebg-preview.png" alt="EasyCoin">
-            
+
+<div class="app-container">
+  <!-- HEADER: industrial CE fixed layout -->
+  <header class="top-header">
+    <img class="logo-img" src="https://i.postimg.cc/4xGbphPW/Screenshot-2026-04-12-at-3-41-51-PM-removebg-preview.png" alt="EasyCoin Industrial Logo">
+    <div class="header-right">
+      <div class="balance-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10" stroke="#facc15"/>
+          <polygon points="12,6 13.5,10 18,10 14.5,13 16,18 12,15 8,18 9.5,13 6,10 10.5,10 12,6" fill="#facc15" stroke="none"/>
+        </svg>
+        <span class="balance" id="userBalance">1,280.50</span>
+      </div>
+      <div class="user-avatar-container">
+        <div class="avatar-wrapper">
+          <img class="user-avatar" src="https://i.pravatar.cc/100?img=42" alt="Operator">
+          <div class="level-badge">Lv.8</div>
         </div>
-        <div class="header-stats">
-            <div class="balance-badge">
-                <span style="font-size:1.2rem;">🔑</span>
-                <span class="balance-number" id="globalBalance">1,912</span>
-            </div>
-            <div class="profile-trigger" id="headerProfileBtn">
-                <div class="avatar-icon">E</div>
-                <span>Profile</span>
-            </div>
-        </div>
+      </div>
     </div>
+  </header>
 
-    <!-- ========= HORIZONTAL NAVIGATION (directly below header, upper area) ========= -->
-    <div class="nav-links" id="navLinksContainer">
-        <button class="nav-btn active-nav" data-nav="earn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l7 7-7 13L5 9l7-7z"/></svg>
-            <span>Earn</span>
-        </button>
-        <button class="nav-btn" data-nav="shop">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l3.6 7.59L6 14h13l3-7H6"/></svg>
-            <span>Shop</span>
-        </button>
-        <button class="nav-btn" data-nav="leaders">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 21h8M12 17v4M7 4v2a5 5 0 0 0 10 0V4H7z"/><path d="M5 4H2v2a5 5 0 0 0 5 5"/><path d="M19 4h3v2a5 5 0 0 1-5 5"/></svg>
-            <span>Leaders</span>
-        </button>
-        <button class="nav-btn" data-nav="help">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="1"/></svg>
-            <span>Help</span>
-        </button>
-        <button class="nav-btn" data-nav="chat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>Chat</span>
-        </button>
-        <button class="nav-btn" data-nav="profile">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Profile</span>
-        </button>
-    </div>
+  <!-- Mobile menu (only visible on small screens, but clean) -->
+  <div class="mobile-header">
+    <button id="mobileMenuBtn" aria-label="Menu">☰ MENU</button>
+  </div>
+  <div class="mobile-accordion" id="mobileAccordion">
+    <div class="accordion-item"><div class="accordion-header" data-target="earn">⚡ EARN</div></div>
+    <div class="accordion-item"><div class="accordion-header" data-target="shop">🛒 SHOP</div></div>
+    <div class="accordion-item"><div class="accordion-header" data-target="leaders">🏆 LEADERS</div></div>
+    <div class="accordion-item"><div class="accordion-header" data-target="help">❓ HELP</div></div>
+    <div class="accordion-item"><div class="accordion-header" data-target="chat">💬 CHAT</div></div>
+  </div>
 
-    <!-- ========= MAIN CONTENT SECTIONS ========= -->
-    <main class="main-content">
-        <!-- Earn Section -->
-        <div class="section active" id="section-earn">
-            <div class="card">
-                <div class="card-title">
-                    <span>🟢</span> Earn Diamonds
-                </div>
-                <div class="card-text">
-                    Complete surveys, watch videos, download apps & earn instant rewards. Your balance updates in real time.
-                </div>
-            </div>
+  <!-- DESKTOP MAIN LAYOUT: sidebar + content (clean and fixed) -->
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="nav-item active" data-target="earn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0cbd6" stroke-width="2"><path d="M12 2l7 7-7 13L5 9l7-7z"/></svg>
+        EARN
+      </div>
+      <div class="nav-item" data-target="shop">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0cbd6" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l3.6 7.59L6 14h13l3-7H6"/></svg>
+        SHOP
+      </div>
+      <div class="nav-item" data-target="leaders">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0cbd6" stroke-width="2"><path d="M8 21h8M12 17v4M7 4v2a5 5 0 0 0 10 0V4H7z"/><path d="M5 4H2v2a5 5 0 0 0 5 5"/><path d="M19 4h3v2a5 5 0 0 1-5 5"/></svg>
+        LEADERS
+      </div>
+      <div class="nav-item" data-target="help">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0cbd6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="1"/></svg>
+        HELP
+      </div>
+      <div class="nav-item" data-target="chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c0cbd6" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        CHAT
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- EARN SECTION (neat industrial) -->
+      <div class="section active" id="section-earn">
+        <div class="panel">
+          <div class="panel-title">▶ EARN STAR TOKENS</div>
+          <div class="panel-text">Complete industrial-grade quizzes & tasks — instant rewards.</div>
+          <div class="industrial-metrics">
+            <div class="metric-card"><div class="metric-value" id="todayEarn">+42.80</div><div class="metric-label">Today's earnings</div></div>
+            <div class="metric-card"><div class="metric-value" id="taskCount">3</div><div class="metric-label">Available tasks</div></div>
+            <div class="metric-card"><div class="metric-value">⚡ 1.2x</div><div class="metric-label">Boost active</div></div>
+          </div>
+          <button class="ce-button" id="quizTriggerBtn">▶ START QUIZ — +5 STARS</button>
+          <div class="ce-alert" style="margin-top: 18px; background:#1e262f;">✔️ Daily mission: Complete 2 quizzes → bonus 15 stars</div>
         </div>
+      </div>
 
-        <!-- Shop Section -->
-        <div class="section" id="section-shop">
-            <div class="card">
-                <div class="card-title">🛍️ Rewards Shop</div>
-                <div class="card-text">Spend your EasyCoins on gift cards, crypto vouchers, exclusive skins and more.</div>
-            </div>
+      <!-- SHOP / CASHOUT section (clean cards) -->
+      <div class="section" id="section-shop">
+        <div class="panel">
+          <div class="panel-title">🛒 REWARD EXCHANGE</div>
+          <div class="panel-text">Redeem stars for gift cards & crypto vouchers.</div>
+          <div class="industrial-metrics">
+            <div class="metric-card"><div class="metric-value">$5.00</div><div class="metric-label">Amazon card</div><button class="mini-redeem-btn" data-redeem="5">Redeem</button></div>
+            <div class="metric-card"><div class="metric-value">$10.00</div><div class="metric-label">PayPal voucher</div><button class="mini-redeem-btn" data-redeem="10">Redeem</button></div>
+            <div class="metric-card"><div class="metric-value">-20%</div><div class="metric-label">Sale: Steam</div><button class="mini-redeem-btn" data-redeem="steam">Redeem</button></div>
+          </div>
+          <div id="redeemFeedback" class="ce-text-accent" style="font-size:0.75rem; margin-top:12px;"></div>
         </div>
+      </div>
 
-        <!-- Leaders Section -->
-        <div class="section" id="section-leaders">
-            <div class="card">
-                <div class="card-title">🏆 Leaderboard</div>
-                <div class="card-text">Compete with top earners globally. Weekly winners get bonus diamonds & badges.</div>
-            </div>
+      <!-- LEADERBOARD (neat rows) -->
+      <div class="section" id="section-leaders">
+        <div class="panel">
+          <div class="panel-title">🏆 INDUSTRIAL LEADERBOARD</div>
+          <div class="leader-row"><span class="leader-rank">#001</span><span>CYBER_FOREMAN</span><span>14,820</span></div>
+          <div class="leader-row"><span class="leader-rank">#002</span><span>EASYCOIN_GHOST</span><span>11,340</span></div>
+          <div class="leader-row"><span class="leader-rank">#003</span><span>CE_MINER</span><span>9,675</span></div>
+          <div class="leader-row"><span class="leader-rank">#004</span><span>FACTORY_LEAD</span><span>7,520</span></div>
+          <div class="leader-row"><span class="leader-rank">#005</span><span>TOKEN_SMITH</span><span>6,990</span></div>
+          <div class="mt-3 ce-text-accent" style="font-size:0.7rem;">⟳ Updates every 4 hours</div>
         </div>
+      </div>
 
-        <!-- Help Section -->
-        <div class="section" id="section-help">
-            <div class="card">
-                <div class="card-title">📘 Help Center</div>
-                <div class="card-text">FAQ, support tickets, withdrawal guides. Contact: support@easycoin.com</div>
-            </div>
+      <!-- HELP section (clean) -->
+      <div class="section" id="section-help">
+        <div class="panel">
+          <div class="panel-title">❓ SUPPORT & KNOWLEDGE BASE</div>
+          <div class="panel-text">Troubleshooting, account recovery, and industrial protocols.</div>
+          <div class="ce-alert" style="margin-top: 12px;">📡 System operational | Ticket response < 2h</div>
+          <button class="ce-button" style="margin-top: 18px;">📧 CONTACT SUPPORT</button>
         </div>
+      </div>
 
-        <!-- Chat Section -->
-        <div class="section" id="section-chat">
-            <div class="card">
-                <div class="card-title">💬 Community Hub</div>
-                <div class="card-text">Live chat, tips, and discussions with earners worldwide. Connect now!</div>
-            </div>
+      <!-- CHAT section (fixed terminal) -->
+      <div class="section" id="section-chat">
+        <div class="panel">
+          <div class="panel-title">💬 LIVE OPERATOR CHAT</div>
+          <div class="panel-text">Real-time industrial community channel.</div>
+          <div class="ce-terminal" id="chatTerminal">
+            > [SYSTEM] EasyCoin CE v2.0 online<br>
+            > Operator_42: any new tasks today?<br>
+            > EasyBot: Check EARN tab — fresh quizzes added!<br>
+            > User_09: leaderboard rewards incoming
+          </div>
+          <div class="flex-between mt-3">
+            <input type="text" id="chatInput" placeholder="Type message..." style="width: 78%; background:#0f131c;">
+            <button id="sendChatBtn" style="width: 18%;">SEND</button>
+          </div>
         </div>
-
-        <!-- ========= PROFILE SECTION (with interactive Chart.js) ========= -->
-        <div class="section" id="section-profile">
-            <div class="profile-grid">
-                <!-- Left side: user info + XP -->
-                <div class="user-info-card">
-                    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-                        <div style="width: 78px; height: 78px; background: linear-gradient(145deg,#4f46e5,#c084fc); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 8px 18px rgba(79,70,229,0.4);">⚡</div>
-                        <div>
-                            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
-                                <span style="font-size: 26px; font-weight: 800;">CRYPTO_LEGEND</span>
-                                <span style="background: #4f46e5; padding: 4px 14px; border-radius: 60px; font-size: 12px; font-weight: 600;">LVL 16</span>
-                            </div>
-                            <div style="color: #9ca3af; margin-top: 6px;">📅 Member since Oct 2024 · <span style="color:#a3e635;">● Online</span></div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 28px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;"><span>✨ XP Progress</span><span style="color:#a3e635;">7,280 / 9,500 XP</span></div>
-                        <div style="background: #1e293b; height: 10px; border-radius: 20px; margin-top: 8px; overflow: hidden;">
-                            <div style="width: 76%; background: linear-gradient(90deg,#a3e635,#eab308); height: 100%; border-radius: 20px;"></div>
-                        </div>
-                        <div class="card-text" style="margin-top: 12px;">🎯 2,220 XP to next level → +120 bonus coins</div>
-                    </div>
-                </div>
-
-                <!-- Right side: 4 stat cards -->
-                <div class="stats-mini-grid">
-                    <div class="stat-brick"><div class="stat-number-lg" id="statTotalEarn">23,450</div><div style="color:#9ca3af;">💰 Total Earnings</div></div>
-                    <div class="stat-brick"><div class="stat-number-lg" id="statOffers">684</div><div style="color:#9ca3af;">✅ Offers Done</div></div>
-                    <div class="stat-brick"><div class="stat-number-lg" id="statReferrals">58</div><div style="color:#9ca3af;">👥 Referrals</div></div>
-                    <div class="stat-brick"><div class="stat-number-lg" id="stat30Days">4,210</div><div style="color:#9ca3af;">📈 30d Earnings</div></div>
-                </div>
-            </div>
-
-            <!-- CHART SECTION with Chart.js -->
-            <div class="chart-panel">
-                <div class="chart-header">
-                    <div class="card-title" style="margin:0; font-size:1.3rem;">📊 Earnings Timeline</div>
-                    <div class="time-group" id="chartTimeGroup">
-                        <button class="time-btn active-time" data-range="30">30 days</button>
-                        <button class="time-btn" data-range="7">7 days</button>
-                        <button class="time-btn" data-range="24h">24 hours</button>
-                    </div>
-                </div>
-                <canvas id="earningsChart" width="800" height="270" style="max-height:270px; width:100%"></canvas>
-                <div class="card-text" style="text-align: center; margin-top: 16px;">✨ Interactive chart — daily EasyCoin earnings ✨</div>
-            </div>
-        </div>
+      </div>
     </main>
+  </div>
+
+  <!-- STATUS BAR (neat, fixed) -->
+  <div class="ce-statusbar">
+    <span>© EasyCoin INDUSTRIAL CE 2007</span>
+    <span>⚡ CONNECTION: SECURE</span>
+    <span id="liveClock">HH:MM:SS UTC</span>
+  </div>
 </div>
 
 <script>
-    // -------- CHART.JS INITIALIZATION ----------
-    const ctx = document.getElementById('earningsChart').getContext('2d');
-    let earningsChart;
+  // ========== FIXED INDUSTRIAL NAVIGATION (desktop + mobile) ==========
+  const navItems = document.querySelectorAll(".nav-item");
+  const sections = document.querySelectorAll(".section");
+  const accordionHeaders = document.querySelectorAll(".accordion-header");
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  const mobileAccordion = document.getElementById("mobileAccordion");
 
-    // realistic datasets for earnings (EasyCoins)
-    const dataSets = {
-        '30': [52, 68, 77, 95, 112, 130, 148, 166, 184, 205, 228, 250, 272, 295, 318, 342, 368, 392, 420, 448, 478, 505, 538, 570, 605, 638, 670, 702, 738, 770],
-        '7': [268, 302, 348, 395, 442, 502, 575],
-        '24h': [68, 82, 95, 110, 128, 147, 166, 188, 210, 235, 258, 284, 310, 338, 365, 392, 420, 448, 478, 505, 535, 568, 600, 635]
-    };
+  function switchToSection(targetId) {
+    sections.forEach(sec => sec.classList.remove("active"));
+    const activeSec = document.getElementById("section-" + targetId);
+    if (activeSec) activeSec.classList.add("active");
 
-    const labelsMap = {
-        '30': Array.from({length: 30}, (_, i) => `Day ${i+1}`),
-        '7': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        '24h': Array.from({length: 24}, (_, i) => `${i}:00`)
-    };
-
-    function renderChart(range) {
-        const data = dataSets[range] || dataSets['30'];
-        const labels = labelsMap[range] || labelsMap['30'];
-        if (earningsChart) {
-            earningsChart.data.datasets[0].data = data;
-            earningsChart.data.labels = labels;
-            earningsChart.update();
-        } else {
-            earningsChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '💰 EasyCoins earned',
-                        data: data,
-                        borderColor: '#a3e635',
-                        backgroundColor: 'rgba(163, 230, 53, 0.06)',
-                        borderWidth: 3,
-                        pointRadius: 3.8,
-                        pointBackgroundColor: '#facc15',
-                        pointBorderColor: '#0f172a',
-                        pointBorderWidth: 1.5,
-                        tension: 0.3,
-                        fill: true,
-                        pointHoverRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        tooltip: { backgroundColor: '#0f172a', titleColor: '#f1f5f9', bodyColor: '#cbd5e1' },
-                        legend: { labels: { color: '#cbd5e6', font: { weight: '500' } } }
-                    },
-                    scales: {
-                        y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Coins', color: '#9ca3af' } },
-                        x: { ticks: { color: '#94a3b8', maxRotation: 40, autoSkip: true }, grid: { display: false } }
-                    }
-                }
-            });
-        }
-    }
-
-    // time buttons logic
-    const timeBtns = document.querySelectorAll('.time-btn');
-    function setActiveTime(range) {
-        timeBtns.forEach(btn => {
-            if (btn.getAttribute('data-range') === range) btn.classList.add('active-time');
-            else btn.classList.remove('active-time');
-        });
-    }
-    timeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const range = btn.getAttribute('data-range');
-            setActiveTime(range);
-            renderChart(range);
-        });
+    // update desktop nav active styles
+    navItems.forEach(item => {
+      if (item.dataset.target === targetId) {
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
     });
+    // close mobile accordion if open
+    if (mobileAccordion) mobileAccordion.style.display = "none";
+  }
 
-    // -------- SECTION SWITCHING (horizontal nav + profile button) ----------
-    const sections = document.querySelectorAll('.section');
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const headerProfileBtn = document.getElementById('headerProfileBtn');
-
-    function activateSection(sectionId) {
-        sections.forEach(sec => sec.classList.remove('active'));
-        const targetSection = document.getElementById(`section-${sectionId}`);
-        if (targetSection) targetSection.classList.add('active');
-
-        // update active class on nav buttons
-        navButtons.forEach(btn => {
-            const navVal = btn.getAttribute('data-nav');
-            if (navVal === sectionId) btn.classList.add('active-nav');
-            else btn.classList.remove('active-nav');
-        });
-    }
-
-    // handle nav clicks
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const target = btn.getAttribute('data-nav');
-            if (target === 'profile') {
-                openProfileSection();
-            } else {
-                activateSection(target);
-            }
-        });
+  // DESKTOP SIDEBAR
+  navItems.forEach(item => {
+    item.addEventListener("click", (e) => {
+      const target = item.dataset.target;
+      if (target) switchToSection(target);
     });
+  });
 
-    let chartInitialized = false;
-
-    function openProfileSection() {
-        activateSection('profile');
-        // animate stats with slight randomness for realism
-        const totalSpan = document.getElementById('statTotalEarn');
-        const offersSpan = document.getElementById('statOffers');
-        const referralsSpan = document.getElementById('statReferrals');
-        const earnings30Span = document.getElementById('stat30Days');
-        const balanceSpan = document.getElementById('globalBalance');
-        if (totalSpan) totalSpan.innerText = Math.floor(23450 + Math.random() * 420);
-        if (offersSpan) offersSpan.innerText = Math.floor(684 + Math.random() * 18);
-        if (referralsSpan) referralsSpan.innerText = Math.floor(58 + Math.random() * 5);
-        if (earnings30Span) earnings30Span.innerText = Math.floor(4210 + Math.random() * 280);
-        if (balanceSpan) balanceSpan.innerText = Math.floor(1912 + Math.random() * 65);
-        
-        if (!chartInitialized) {
-            renderChart('30');
-            chartInitialized = true;
-        } else {
-            const activeRangeBtn = document.querySelector('.time-btn.active-time');
-            const range = activeRangeBtn ? activeRangeBtn.getAttribute('data-range') : '30';
-            renderChart(range);
-        }
-    }
-
-    // profile button from header
-    if (headerProfileBtn) {
-        headerProfileBtn.addEventListener('click', openProfileSection);
-    }
-
-    // default open Earn section & ensure balance shows
-    activateSection('earn');
-    // set initial chart dummy but not rendered until profile opens (lazy)
-    // predefine for later usage but avoid errors
-    window.addEventListener('load', () => {
-        // just set default global balance consistent
-        document.getElementById('globalBalance').innerText = '1,912';
+  // MOBILE MENU toggling
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (mobileAccordion.style.display === "block") {
+        mobileAccordion.style.display = "none";
+      } else {
+        mobileAccordion.style.display = "block";
+      }
     });
+  }
+
+  accordionHeaders.forEach(header => {
+    header.addEventListener("click", (e) => {
+      const target = header.dataset.target;
+      if (target) switchToSection(target);
+    });
+  });
+
+  // Close mobile menu on outside click
+  document.addEventListener("click", (event) => {
+    if (mobileAccordion && mobileAccordion.style.display === "block") {
+      if (!mobileMenuBtn.contains(event.target) && !mobileAccordion.contains(event.target)) {
+        mobileAccordion.style.display = "none";
+      }
+    }
+  });
+
+  // ========== INTERACTIVE FEATURES: QUIZ & BALANCE SIMULATION (clean and neat) ==========
+  let userStars = 1280.50;
+  const balanceSpan = document.getElementById("userBalance");
+  const todayEarnSpan = document.getElementById("todayEarn");
+  const taskCountSpan = document.getElementById("taskCount");
+  let availableTasks = 3;
+  let todayEarned = 42.80;
+
+  function updateUI() {
+    balanceSpan.innerText = userStars.toFixed(2);
+    todayEarnSpan.innerText = `+${todayEarned.toFixed(2)}`;
+    taskCountSpan.innerText = availableTasks;
+  }
+
+  // QUIZ BUTTON: add stars, reduce tasks, update daily earnings
+  const quizBtn = document.getElementById("quizTriggerBtn");
+  if (quizBtn) {
+    quizBtn.addEventListener("click", () => {
+      if (availableTasks <= 0) {
+        const alertBox = document.querySelector("#section-earn .ce-alert");
+        if (alertBox) alertBox.innerHTML = "⚠️ No tasks remaining! New tasks arrive in 2 hours.";
+        return;
+      }
+      const reward = 5.0;
+      userStars += reward;
+      todayEarned += reward;
+      availableTasks--;
+      updateUI();
+      // optional visual feedback
+      const quizPanel = document.querySelector("#section-earn .panel");
+      const tempMsg = document.createElement("div");
+      tempMsg.className = "ce-alert";
+      tempMsg.style.marginTop = "12px";
+      tempMsg.style.background = "#1e2a1e";
+      tempMsg.innerText = `✔️ +${reward} STARS earned! New balance: ${userStars.toFixed(2)}`;
+      quizPanel.appendChild(tempMsg);
+      setTimeout(() => tempMsg.remove(), 2000);
+      if (availableTasks === 0 && taskCountSpan) taskCountSpan.innerText = "0";
+    });
+  }
+
+  // REDEEM functionality (shop)
+  const redeemBtns = document.querySelectorAll(".mini-redeem-btn");
+  const redeemFeedback = document.getElementById("redeemFeedback");
+  redeemBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let cost = 0;
+      let itemName = "";
+      if (btn.dataset.redeem === "5") { cost = 500; itemName = "$5 Amazon card"; }
+      else if (btn.dataset.redeem === "10") { cost = 950; itemName = "$10 PayPal voucher"; }
+      else if (btn.dataset.redeem === "steam") { cost = 350; itemName = "Steam $5 (sale -20%)"; }
+      else { cost = 0; itemName = "item"; }
+      
+      if (userStars >= cost && cost > 0) {
+        userStars -= cost;
+        updateUI();
+        redeemFeedback.innerText = `✅ Redeemed ${itemName} for ${cost} stars. New balance: ${userStars.toFixed(2)}`;
+        setTimeout(() => { if(redeemFeedback) redeemFeedback.innerText = ""; }, 3000);
+      } else if (cost > 0) {
+        redeemFeedback.innerText = `❌ Insufficient stars! Need ${cost} stars. Current: ${userStars.toFixed(2)}`;
+        setTimeout(() => { if(redeemFeedback) redeemFeedback.innerText = ""; }, 2500);
+      } else {
+        redeemFeedback.innerText = `⚠️ Invalid redemption code.`;
+      }
+    });
+  });
+
+  // CHAT functionality (live terminal simulation, clean)
+  const chatInput = document.getElementById("chatInput");
+  const sendChatBtn = document.getElementById("sendChatBtn");
+  const chatTerminal = document.getElementById("chatTerminal");
+
+  function addChatMessage(sender, message) {
+    if (!chatTerminal) return;
+    const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    const newLine = document.createElement("div");
+    newLine.style.fontFamily = "monospace";
+    newLine.style.padding = "2px 0";
+    newLine.innerHTML = `> [${time}] ${sender}: ${message}`;
+    chatTerminal.appendChild(newLine);
+    chatTerminal.scrollTop = chatTerminal.scrollHeight;
+    // keep terminal tidy: limit lines
+    while(chatTerminal.children.length > 18) chatTerminal.removeChild(chatTerminal.firstChild);
+  }
+
+  if (sendChatBtn && chatInput) {
+    sendChatBtn.addEventListener("click", () => {
+      const msg = chatInput.value.trim();
+      if (msg === "") return;
+      addChatMessage("You", msg);
+      chatInput.value = "";
+      // Auto-reply from EasyBot (industrial vibe)
+      setTimeout(() => {
+        addChatMessage("EasyBot", "Acknowledged. Task queue online.");
+      }, 400);
+    });
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendChatBtn.click();
+    });
+  }
+
+  // Live clock (industrial status)
+  function updateClock() {
+    const clockSpan = document.getElementById("liveClock");
+    if (clockSpan) {
+      const now = new Date();
+      clockSpan.innerText = now.toUTCString().slice(17, 25) + " UTC";
+    }
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // Set default active section if any mismatch
+  if (!document.querySelector(".section.active")) switchToSection("earn");
+  
+  // Additional small fix: initial tasks display
+  updateUI();
 </script>
 </body>
 </html>
